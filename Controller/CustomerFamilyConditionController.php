@@ -49,7 +49,7 @@ class CustomerFamilyConditionController extends BaseAdminController
             /** @var CustomerFamily $customerFamily */
             foreach ($customerFamilies as $customerFamily) {
                 $customerFamilyPaymentsModules[$customerFamily->getId()][$paymentModule->getId()] = 0;
-                $familyCodes[$customerFamily->getId()] = $customerFamily->getCode(). ' ('.$customerFamily->setLocale($currentLocale)->getTitle().')';
+                $familyCodes[$customerFamily->getId()] = $customerFamily->setLocale($currentLocale)->getTitle(). ' ('.$customerFamily->getCode().')';
             }
         }
 
