@@ -19,9 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CustomerFamilyConditionController extends BaseAdminController
 {
-    public function __construct(private RequestStack $requestStack)
-    {
-    }
 
     /**
      * @Route("", name="view", methods="GET")

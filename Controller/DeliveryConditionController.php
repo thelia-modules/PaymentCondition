@@ -4,7 +4,6 @@ namespace PaymentCondition\Controller;
 
 use PaymentCondition\Model\PaymentDeliveryCondition;
 use PaymentCondition\Model\PaymentDeliveryConditionQuery;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\ModuleQuery;
@@ -48,9 +47,9 @@ class DeliveryConditionController extends BaseAdminController
     /**
      * @Route("", name="save", methods="POST")
      */
-    public function saveAction(RequestStack $requestStack)
+    public function saveAction()
     {
-        $request = $requestStack->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         try {
             $paymentId = $request->request->get("paymentId");
