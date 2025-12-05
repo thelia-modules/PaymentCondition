@@ -15,16 +15,20 @@ use PaymentCondition\Model\PaymentDeliveryConditionQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\Join;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Thelia\Domain\Cart\Service\CartRetriever;
 use Thelia\Model\AddressQuery;
+use Thelia\Model\ConfigQuery;
 use Thelia\Model\Map\CountryAreaTableMap;
 use Thelia\Model\Map\ModuleTableMap;
 use Thelia\Model\ModuleQuery;
 use Thelia\Model\Order;
+use Thelia\Tools\Version\Version;
 
 class PaymentConditionService
 {
     public function __construct(
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private CartRetriever $cartRetriever,
     )
     {
     }
@@ -48,6 +52,11 @@ class PaymentConditionService
         }
 
         $deliveryModuleId = $order->getDeliveryModuleId();
+
+        // After 2.6, the order is set later
+        if (Version::test(ConfigQuery::read('thelia_version'), '2.6', false, ">=")) {
+            $deliveryModuleId = $this->cartRetriever->fromSession()?->getDeliveryModuleId();
+        }
 
         if (null === $deliveryModuleId) {
             return;
