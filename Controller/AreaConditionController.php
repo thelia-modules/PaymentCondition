@@ -9,16 +9,16 @@ use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\AreaQuery;
 use Thelia\Model\ModuleQuery;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * @Route("/admin/module/paymentcondition/area", name="payment_condition_area_condition_")
  */
 class AreaConditionController extends BaseAdminController
 {
     /**
      * @Route("", name="view", methods="GET")
      */
+    #[Route('/admin/module/paymentcondition/area', name: 'payment_condition_area_condition_')]
     public function viewAction()
     {
         $areaPaymentConditionArray = [];
@@ -46,8 +46,8 @@ class AreaConditionController extends BaseAdminController
     }
 
     /**
-     * @Route("", name="save", methods="POST")
      */
+    #[Route(', name=', name: 'save', methods: ['POST'])]
     public function saveAction(RequestStack $requestStack)
     {
         $request = $requestStack->getCurrentRequest();

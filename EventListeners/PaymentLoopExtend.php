@@ -49,7 +49,7 @@ class PaymentLoopExtend implements EventSubscriberInterface
         $this->paymentConditionService->filterByCustomerCondition($moduleQuery);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         $events = [];
 

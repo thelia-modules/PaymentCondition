@@ -7,16 +7,16 @@ use PaymentCondition\Model\PaymentDeliveryConditionQuery;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\ModuleQuery;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * @Route("/admin/module/paymentcondition/delivery", name="payment_condition_delivery_condition_")
  */
 class DeliveryConditionController extends BaseAdminController
 {
     /**
      * @Route("", name="view", methods="GET")
      */
+    #[Route('/admin/module/paymentcondition/delivery', name: 'payment_condition_delivery_condition_')]
     public function viewAction()
     {
         $paymentDeliveryConditionArray = [];
@@ -45,8 +45,8 @@ class DeliveryConditionController extends BaseAdminController
     }
 
     /**
-     * @Route("", name="save", methods="POST")
      */
+    #[Route(', name=', name: 'save', methods: ['POST'])]
     public function saveAction()
     {
         $request = $this->requestStack->getCurrentRequest();

@@ -14,7 +14,7 @@ class PaymentListener implements EventSubscriberInterface
     {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
              TheliaEvents::MODULE_PAYMENT_IS_VALID => ['applyPaymentCondition', 128],

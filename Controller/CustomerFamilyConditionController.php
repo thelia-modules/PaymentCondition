@@ -12,10 +12,9 @@ use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\LangQuery;
 use Thelia\Model\Module;
 use Thelia\Model\ModuleQuery;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * @Route("/admin/module/paymentcondition/customerfamily", name="payment_condition_customer_family_condition_")
  */
 class CustomerFamilyConditionController extends BaseAdminController
 {
@@ -23,6 +22,7 @@ class CustomerFamilyConditionController extends BaseAdminController
     /**
      * @Route("", name="view", methods="GET")
      */
+    #[Route('/admin/module/paymentcondition/customerfamily', name: 'payment_condition_customer_family_condition_')]
     public function viewAction()
     {
         $customerFamilyPaymentsModules = [];
@@ -68,8 +68,8 @@ class CustomerFamilyConditionController extends BaseAdminController
     }
 
     /**
-     * @Route("", name="save", methods="POST")
      */
+    #[Route(', name=', name: 'save', methods: ['POST'])]
     public function saveAction(RequestStack $requestStack)
     {
         $request = $requestStack->getCurrentRequest();
