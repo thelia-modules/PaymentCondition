@@ -28,7 +28,11 @@ class CustomerFamilyConditionController extends BaseAdminController
         $customerFamilies = CustomerFamilyQuery::create()
             ->find();
 
-        $currentLocale = $this->requestStack->getSession()->getAdminEditionLang()->getLocale();
+        $currentLocale = null;
+        $currentRequest = $this->requestStack->getCurrentRequest();
+        if ($currentRequest !== null && $currentRequest->hasSession()) {
+            $currentLocale = $currentRequest->getSession()->getAdminEditionLang()->getLocale();
+        }
         if (!$currentLocale) {
             $currentLocale = LangQuery::create()->filterByByDefault(true)->findOne()->getLocale();
         }
