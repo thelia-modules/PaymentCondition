@@ -1,0 +1,36 @@
+<div id="payment_condition_container">
+    <div id="payment_condition_delivery"></div>
+
+    {loop name="customer_family_enabled" type="module" code="CustomerFamily" active="1"}
+        <div id="payment_condition_customer_family"></div>
+    {/loop}
+    {elseloop rel="customer_family_enabled"}
+        <div class="alert alert-info">
+            {intl l="Install and activate 'CustomerFamily' module to get configuration options." d='paymentcondition.bo.default'}
+        </div>
+    {/elseloop}
+
+    <div id="payment_condition_area"></div>
+</div>
+
+{javascripts file='assets/js/bootstrap-switch/bootstrap-switch.js'}
+    <script src='{$asset_url}'></script>
+{/javascripts}
+
+<script>
+    $(function () {
+        $.get('{url path="/admin/module/paymentcondition/delivery"}').done(function (data) {
+            $('#payment_condition_delivery').append(data);
+        });
+
+        if ($("#payment_condition_customer_family").length) {
+            $.get('{url path="/admin/module/paymentcondition/customerfamily"}').done(function (data) {
+                $('#payment_condition_customer_family').append(data);
+            });
+        }
+
+        $.get('{url path="/admin/module/paymentcondition/area"}').done(function (data) {
+            $('#payment_condition_area').append(data);
+        });
+    });
+</script>

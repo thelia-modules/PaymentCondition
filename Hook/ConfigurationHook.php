@@ -2,13 +2,28 @@
 
 namespace PaymentCondition\Hook;
 
-use HookAdminHome\Hook\AdminHook;
 use Thelia\Core\Event\Hook\HookRenderEvent;
+use Thelia\Core\Hook\BaseHook;
+use Thelia\Model\ModuleQuery;
 
-class ConfigurationHook extends AdminHook
+class ConfigurationHook extends BaseHook
 {
-    public function onModuleConfiguration(HookRenderEvent $event)
+    public static function getSubscribedHooks(): array
     {
-        $event->add($this->render("module_configuration.html", []));
+        return [
+            'module.configuration' => [
+                ['type' => 'back', 'method' => 'onModuleConfiguration'],
+            ],
+        ];
+    }
+
+    public function onModuleConfiguration(HookRenderEvent $event): void
+    {
+        $customerFamilyModule = ModuleQuery::create()->findOneByCode('CustomerFamily');
+        $customerFamilyEnabled = null !== $customerFamilyModule && 0 !== $customerFamilyModule->getActivate();
+
+        $event->add($this->render('PaymentCondition/module_configuration.html.twig', [
+            'customerFamilyEnabled' => $customerFamilyEnabled,
+        ]));
     }
 }

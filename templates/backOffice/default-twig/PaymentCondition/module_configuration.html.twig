@@ -1,0 +1,50 @@
+{# Payment condition module configuration (module.configuration hook fragment) #}
+<div class="card mb-3">
+    <div class="card-header">
+        <h5 class="card-title mb-0">{{ 'Payment condition module configuration'|trans({}, 'paymentcondition.bo.default') }}</h5>
+    </div>
+    <div class="card-body">
+        <div id="payment_condition_container"
+             data-delivery-url="{{ path('payment_condition_delivery_condition_view') }}"
+             {% if customerFamilyEnabled %}data-customerfamily-url="{{ path('payment_condition_customer_family_condition_view') }}"{% endif %}
+             data-area-url="{{ path('payment_condition_area_condition_view') }}">
+            <div id="payment_condition_delivery"></div>
+
+            {% if customerFamilyEnabled %}
+                <div id="payment_condition_customer_family"></div>
+            {% else %}
+                <div class="alert alert-info">
+                    {{ "Install and activate 'CustomerFamily' module to get configuration options."|trans({}, 'paymentcondition.bo.default') }}
+                </div>
+            {% endif %}
+
+            <div id="payment_condition_area"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var container = document.getElementById('payment_condition_container');
+        if (!container) {
+            return;
+        }
+
+        function loadFragment(url, targetId) {
+            if (!url) {
+                return;
+            }
+            var target = document.getElementById(targetId);
+            if (!target) {
+                return;
+            }
+            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function (response) { return response.text(); })
+                .then(function (html) { target.innerHTML = html; });
+        }
+
+        loadFragment(container.dataset.deliveryUrl, 'payment_condition_delivery');
+        loadFragment(container.dataset.customerfamilyUrl, 'payment_condition_customer_family');
+        loadFragment(container.dataset.areaUrl, 'payment_condition_area');
+    })();
+</script>

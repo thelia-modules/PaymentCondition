@@ -6,23 +6,16 @@ use CustomerFamily\Model\CustomerFamily;
 use CustomerFamily\Model\CustomerFamilyQuery;
 use PaymentCondition\Model\PaymentCustomerFamilyCondition;
 use PaymentCondition\Model\PaymentCustomerFamilyConditionQuery;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\LangQuery;
 use Thelia\Model\Module;
 use Thelia\Model\ModuleQuery;
-use Symfony\Component\Routing\Attribute\Route;
 
-/**
- */
 class CustomerFamilyConditionController extends BaseAdminController
 {
-
-    /**
-     * @Route("", name="view", methods="GET")
-     */
-    #[Route('/admin/module/paymentcondition/customerfamily', name: 'payment_condition_customer_family_condition_')]
+    #[Route('/admin/module/paymentcondition/customerfamily', name: 'payment_condition_customer_family_condition_view', methods: ['GET'])]
     public function viewAction()
     {
         $customerFamilyPaymentsModules = [];
@@ -36,9 +29,10 @@ class CustomerFamilyConditionController extends BaseAdminController
             ->find();
 
         $currentLocale = $this->requestStack->getSession()->getAdminEditionLang()->getLocale();
-        if (!$currentLocale){
+        if (!$currentLocale) {
             $currentLocale = LangQuery::create()->filterByByDefault(true)->findOne()->getLocale();
         }
+
         /** @var Module $paymentModule */
         foreach ($paymentModules as $paymentModule) {
             $moduleCodes[$paymentModule->getId()] = $paymentModule->getCode();
@@ -46,7 +40,7 @@ class CustomerFamilyConditionController extends BaseAdminController
             /** @var CustomerFamily $customerFamily */
             foreach ($customerFamilies as $customerFamily) {
                 $customerFamilyPaymentsModules[$customerFamily->getId()][$paymentModule->getId()] = 0;
-                $familyCodes[$customerFamily->getId()] = $customerFamily->setLocale($currentLocale)->getTitle(). ' ('.$customerFamily->getCode().')';
+                $familyCodes[$customerFamily->getId()] = $customerFamily->setLocale($currentLocale)->getTitle() . ' (' . $customerFamily->getCode() . ')';
             }
         }
 
@@ -61,23 +55,21 @@ class CustomerFamilyConditionController extends BaseAdminController
         }
 
         return $this->render('payment-condition/customer_family', [
-            "module_codes" => $moduleCodes,
-            "family_codes" => $familyCodes,
-            "paymentFamilyCondition" =>$customerFamilyPaymentsModules
+            'module_codes' => $moduleCodes,
+            'family_codes' => $familyCodes,
+            'paymentFamilyCondition' => $customerFamilyPaymentsModules,
         ]);
     }
 
-    /**
-     */
-    #[Route(', name=', name: 'save', methods: ['POST'])]
-    public function saveAction(RequestStack $requestStack)
+    #[Route('/admin/module/paymentcondition/customerfamily', name: 'payment_condition_customer_family_condition_save', methods: ['POST'])]
+    public function saveAction()
     {
-        $request = $requestStack->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         try {
-            $moduleId = $request->request->get("moduleId");
-            $customerFamilyId = $request->request->get("customerFamilyId");
-            $isValid = $request->request->get("isValid") == "true" ? 1 : 0;
+            $moduleId = $request->request->get('moduleId');
+            $customerFamilyId = $request->request->get('customerFamilyId');
+            $isValid = $request->request->get('isValid') === 'true' ? 1 : 0;
 
             $paymentCustomerFamily = PaymentCustomerFamilyConditionQuery::create()
                 ->filterByPaymentModuleId($moduleId)
@@ -86,10 +78,10 @@ class CustomerFamilyConditionController extends BaseAdminController
 
             $paymentCustomerFamily->setIsValid($isValid)
                 ->save();
-
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 500);
         }
-        return new JsonResponse("Success");
+
+        return new JsonResponse('Success');
     }
 }

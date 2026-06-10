@@ -1,0 +1,60 @@
+{# Shipping area condition matrix fragment (loaded via AJAX into the module config page) #}
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">{{ 'Condition by chosen shipping area'|trans({}, 'paymentcondition.bo.default') }}</h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <td></td>
+                        {% for paymentModule in paymentModules %}
+                            <td>{{ paymentModule.code }}</td>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shippingArea in shippingAreas %}
+                        <tr>
+                            <td>{{ shippingArea.name }}</td>
+                            {% for paymentModule in paymentModules %}
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input area_condition_switch" type="checkbox"
+                                               data-area="{{ shippingArea.id }}" data-payment="{{ paymentModule.id }}"
+                                               {{ areaPaymentCondition[paymentModule.id][shippingArea.id]|default(false) ? 'checked' : '' }}>
+                                    </div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var url = "{{ path('payment_condition_area_condition_save') }}";
+        document.querySelectorAll('.area_condition_switch').forEach(function (input) {
+            input.addEventListener('change', function () {
+                var checkbox = this;
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+                    body: new URLSearchParams({
+                        areaId: checkbox.dataset.area,
+                        paymentId: checkbox.dataset.payment,
+                        isValid: checkbox.checked ? 'true' : 'false'
+                    })
+                }).then(function (response) {
+                    if (!response.ok) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                }).catch(function () {
+                    checkbox.checked = !checkbox.checked;
+                });
+            });
+        });
+    })();
+</script>

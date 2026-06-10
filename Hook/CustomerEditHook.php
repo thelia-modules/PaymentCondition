@@ -9,7 +9,16 @@ use Thelia\Core\Hook\BaseHook;
 
 class CustomerEditHook extends BaseHook
 {
-    public function onCustomerEdit(HookRenderEvent $event)
+    public static function getSubscribedHooks(): array
+    {
+        return [
+            'customer.edit' => [
+                ['type' => 'back', 'method' => 'onCustomerEdit'],
+            ],
+        ];
+    }
+
+    public function onCustomerEdit(HookRenderEvent $event): void
     {
         $customerId = $event->getArgument('customer_id');
 
@@ -26,6 +35,6 @@ class CustomerEditHook extends BaseHook
             }
         }
 
-        $event->add($this->render('payment-condition/customer_edit_hook.html', compact('paymentCustomerCondition', 'allowedModules')));
+        $event->add($this->render('PaymentCondition/customer_edit_hook.html.twig', compact('paymentCustomerCondition', 'allowedModules')));
     }
 }

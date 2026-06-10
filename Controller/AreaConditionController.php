@@ -4,21 +4,15 @@ namespace PaymentCondition\Controller;
 
 use PaymentCondition\Model\PaymentAreaCondition;
 use PaymentCondition\Model\PaymentAreaConditionQuery;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\AreaQuery;
 use Thelia\Model\ModuleQuery;
-use Symfony\Component\Routing\Attribute\Route;
 
-/**
- */
 class AreaConditionController extends BaseAdminController
 {
-    /**
-     * @Route("", name="view", methods="GET")
-     */
-    #[Route('/admin/module/paymentcondition/area', name: 'payment_condition_area_condition_')]
+    #[Route('/admin/module/paymentcondition/area', name: 'payment_condition_area_condition_view', methods: ['GET'])]
     public function viewAction()
     {
         $areaPaymentConditionArray = [];
@@ -41,21 +35,19 @@ class AreaConditionController extends BaseAdminController
         return $this->render('payment-condition/shipping_area', [
             'paymentModules' => $paymentModules,
             'shippingAreas' => $shippingAreas,
-            "areaPaymentCondition" => $areaPaymentConditionArray
+            'areaPaymentCondition' => $areaPaymentConditionArray,
         ]);
     }
 
-    /**
-     */
-    #[Route(', name=', name: 'save', methods: ['POST'])]
-    public function saveAction(RequestStack $requestStack)
+    #[Route('/admin/module/paymentcondition/area', name: 'payment_condition_area_condition_save', methods: ['POST'])]
+    public function saveAction()
     {
-        $request = $requestStack->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         try {
-            $paymentId = $request->request->get("paymentId");
-            $areaId = $request->request->get("areaId");
-            $isValid = $request->request->get("isValid") == "true" ? 1 : 0;
+            $paymentId = $request->request->get('paymentId');
+            $areaId = $request->request->get('areaId');
+            $isValid = $request->request->get('isValid') === 'true' ? 1 : 0;
 
             $paymentArea = PaymentAreaConditionQuery::create()
                 ->filterByPaymentModuleId($paymentId)
@@ -64,10 +56,10 @@ class AreaConditionController extends BaseAdminController
 
             $paymentArea->setIsValid($isValid)
                 ->save();
-
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 500);
         }
-        return new JsonResponse("Success");
+
+        return new JsonResponse('Success');
     }
 }
