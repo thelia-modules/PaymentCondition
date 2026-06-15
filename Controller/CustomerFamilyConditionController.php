@@ -12,6 +12,7 @@ use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\LangQuery;
 use Thelia\Model\Module;
 use Thelia\Model\ModuleQuery;
+use Thelia\Module\BaseModule;
 
 class CustomerFamilyConditionController extends BaseAdminController
 {
@@ -23,7 +24,8 @@ class CustomerFamilyConditionController extends BaseAdminController
         $familyCodes = [];
 
         $paymentModules = ModuleQuery::create()
-            ->findByCategory('payment');
+            ->filterByType(BaseModule::PAYMENT_MODULE_TYPE)
+            ->find();
 
         $customerFamilies = CustomerFamilyQuery::create()
             ->find();
