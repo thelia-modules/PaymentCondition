@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\ModuleQuery;
+use Thelia\Module\BaseModule;
 
 class DeliveryConditionController extends BaseAdminController
 {
@@ -17,10 +18,12 @@ class DeliveryConditionController extends BaseAdminController
         $paymentDeliveryConditionArray = [];
 
         $paymentModules = ModuleQuery::create()
-            ->findByCategory('payment');
+            ->filterByType(BaseModule::PAYMENT_MODULE_TYPE)
+            ->find();
 
         $deliveryModules = ModuleQuery::create()
-            ->findByCategory('delivery');
+            ->filterByType(BaseModule::DELIVERY_MODULE_TYPE)
+            ->find();
 
         $paymentDeliveryConditions = PaymentDeliveryConditionQuery::create()
             ->find();

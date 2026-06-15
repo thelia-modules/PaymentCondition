@@ -9,6 +9,7 @@ use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\AreaQuery;
 use Thelia\Model\ModuleQuery;
+use Thelia\Module\BaseModule;
 
 class AreaConditionController extends BaseAdminController
 {
@@ -18,7 +19,8 @@ class AreaConditionController extends BaseAdminController
         $areaPaymentConditionArray = [];
 
         $paymentModules = ModuleQuery::create()
-            ->findByCategory('payment');
+            ->filterByType(BaseModule::PAYMENT_MODULE_TYPE)
+            ->find();
 
         $shippingAreas = AreaQuery::create()->find();
 
