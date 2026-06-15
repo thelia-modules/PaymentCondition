@@ -6,6 +6,7 @@ use PaymentCondition\Model\PaymentCustomerConditionQuery;
 use PaymentCondition\Model\PaymentCustomerModuleConditionQuery;
 use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
+use Thelia\Core\Template\Parser\ParserResolver;
 
 class CustomerEditHook extends BaseHook
 {
@@ -35,6 +36,17 @@ class CustomerEditHook extends BaseHook
             }
         }
 
-        $event->add($this->render('PaymentCondition/customer_edit_hook.html.twig', compact('paymentCustomerCondition', 'allowedModules')));
+        $event->add($this->render($this->resolveTemplateName('PaymentCondition/customer_edit_hook'), compact('paymentCustomerCondition', 'allowedModules')));
+    }
+
+    /**
+     * Append the current parser extension so the same hook serves the Smarty (default)
+     * and Twig (default-twig) back-office templates: Smarty -> ".html", Twig -> ".html.twig".
+     */
+    private function resolveTemplateName(string $baseName): string
+    {
+        $extension = ParserResolver::getCurrentParser()?->getFileExtension() ?? 'html';
+
+        return $baseName.'.'.$extension;
     }
 }
