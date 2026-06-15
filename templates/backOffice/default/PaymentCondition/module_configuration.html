@@ -18,7 +18,10 @@
 {/javascripts}
 
 <script>
-    $(function () {
+    // This fragment renders in the "module.configuration" hook (main content), which is output
+    // before jQuery is loaded at the bottom of admin-layout.tpl. Defer to DOMContentLoaded so
+    // jQuery (and thus $.get/.append, which runs the injected fragment scripts) is available.
+    document.addEventListener('DOMContentLoaded', function () {
         $.get('{url path="/admin/module/paymentcondition/delivery"}').done(function (data) {
             $('#payment_condition_delivery').append(data);
         });
