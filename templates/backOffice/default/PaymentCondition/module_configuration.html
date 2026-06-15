@@ -14,26 +14,28 @@
 </div>
 
 {javascripts file='assets/js/bootstrap-switch/bootstrap-switch.js'}
-    <script src='{$asset_url}'></script>
-{/javascripts}
-
 <script>
-    // This fragment renders in the "module.configuration" hook (main content), which is output
-    // before jQuery is loaded at the bottom of admin-layout.tpl. Defer to DOMContentLoaded so
-    // jQuery (and thus $.get/.append, which runs the injected fragment scripts) is available.
+    // The "module.configuration" hook renders in the main content, before jQuery is loaded at the
+    // bottom of admin-layout.tpl. Defer to DOMContentLoaded (jQuery is then available), load the
+    // bootstrap-switch plugin, then pull each matrix fragment. Each fragment's inline script calls
+    // .bootstrapSwitch() and binds the switch-change -> $.post save handler, so the plugin must be
+    // registered (after jQuery) before the fragments are appended.
     document.addEventListener('DOMContentLoaded', function () {
-        $.get('{url path="/admin/module/paymentcondition/delivery"}').done(function (data) {
-            $('#payment_condition_delivery').append(data);
-        });
-
-        if ($("#payment_condition_customer_family").length) {
-            $.get('{url path="/admin/module/paymentcondition/customerfamily"}').done(function (data) {
-                $('#payment_condition_customer_family').append(data);
+        $.getScript('{$asset_url}').always(function () {
+            $.get('{url path="/admin/module/paymentcondition/delivery"}').done(function (data) {
+                $('#payment_condition_delivery').append(data);
             });
-        }
 
-        $.get('{url path="/admin/module/paymentcondition/area"}').done(function (data) {
-            $('#payment_condition_area').append(data);
+            if ($("#payment_condition_customer_family").length) {
+                $.get('{url path="/admin/module/paymentcondition/customerfamily"}').done(function (data) {
+                    $('#payment_condition_customer_family').append(data);
+                });
+            }
+
+            $.get('{url path="/admin/module/paymentcondition/area"}').done(function (data) {
+                $('#payment_condition_area').append(data);
+            });
         });
     });
 </script>
+{/javascripts}
