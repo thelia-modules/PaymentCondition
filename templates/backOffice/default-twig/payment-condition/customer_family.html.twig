@@ -36,7 +36,7 @@
 
 <script>
     (function () {
-        var url = "{{ path('payment_condition_customer_family_condition_save') }}";
+        var url = "{{ path('payment_condition_customer_family_condition_save') }}?_token={{ assignToken() }}";
         document.querySelectorAll('.customer_family_condition_switch').forEach(function (input) {
             input.addEventListener('change', function () {
                 var checkbox = this;

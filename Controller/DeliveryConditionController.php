@@ -9,6 +9,7 @@ use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\ModuleQuery;
 use Thelia\Module\BaseModule;
+use Thelia\Tools\TokenProvider;
 
 class DeliveryConditionController extends BaseAdminController
 {
@@ -43,9 +44,11 @@ class DeliveryConditionController extends BaseAdminController
     }
 
     #[Route('/admin/module/paymentcondition/delivery', name: 'payment_condition_delivery_condition_save', methods: ['POST'])]
-    public function saveAction()
+    public function saveAction(TokenProvider $tokenProvider)
     {
         $request = $this->requestStack->getCurrentRequest();
+
+        $tokenProvider->checkToken((string) $request->query->get('_token'));
 
         try {
             $paymentId = $request->request->get('paymentId');

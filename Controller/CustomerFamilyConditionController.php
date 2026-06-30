@@ -13,6 +13,7 @@ use Thelia\Model\LangQuery;
 use Thelia\Model\Module;
 use Thelia\Model\ModuleQuery;
 use Thelia\Module\BaseModule;
+use Thelia\Tools\TokenProvider;
 
 class CustomerFamilyConditionController extends BaseAdminController
 {
@@ -68,9 +69,11 @@ class CustomerFamilyConditionController extends BaseAdminController
     }
 
     #[Route('/admin/module/paymentcondition/customerfamily', name: 'payment_condition_customer_family_condition_save', methods: ['POST'])]
-    public function saveAction()
+    public function saveAction(TokenProvider $tokenProvider)
     {
         $request = $this->requestStack->getCurrentRequest();
+
+        $tokenProvider->checkToken((string) $request->query->get('_token'));
 
         try {
             $moduleId = $request->request->get('moduleId');

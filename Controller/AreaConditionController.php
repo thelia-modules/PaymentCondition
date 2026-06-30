@@ -10,6 +10,7 @@ use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Model\AreaQuery;
 use Thelia\Model\ModuleQuery;
 use Thelia\Module\BaseModule;
+use Thelia\Tools\TokenProvider;
 
 class AreaConditionController extends BaseAdminController
 {
@@ -42,9 +43,11 @@ class AreaConditionController extends BaseAdminController
     }
 
     #[Route('/admin/module/paymentcondition/area', name: 'payment_condition_area_condition_save', methods: ['POST'])]
-    public function saveAction()
+    public function saveAction(TokenProvider $tokenProvider)
     {
         $request = $this->requestStack->getCurrentRequest();
+
+        $tokenProvider->checkToken((string) $request->query->get('_token'));
 
         try {
             $paymentId = $request->request->get('paymentId');

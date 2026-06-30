@@ -35,7 +35,7 @@
 
 <script>
     (function () {
-        var url = "{{ path('payment_condition_area_condition_save') }}";
+        var url = "{{ path('payment_condition_area_condition_save') }}?_token={{ assignToken() }}";
         document.querySelectorAll('.area_condition_switch').forEach(function (input) {
             input.addEventListener('change', function () {
                 var checkbox = this;
