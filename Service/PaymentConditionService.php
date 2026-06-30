@@ -35,8 +35,13 @@ class PaymentConditionService
 
     public function filterByDeliveryCondition(ModuleQuery $query)
     {
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request || !$request->hasSession()) {
+            return;
+        }
+
         /** @var Order $order */
-        $order = $this->requestStack->getSession()->get('thelia.order');
+        $order = $request->getSession()->get('thelia.order');
 
         if (null === $order) {
             return;
@@ -80,7 +85,12 @@ class PaymentConditionService
 
     public function filterByCustomerFamilyCondition(ModuleQuery $query)
     {
-        $session = $this->requestStack->getCurrentRequest()->getSession();
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request || !$request->hasSession()) {
+            return null;
+        }
+
+        $session = $request->getSession();
 
         $customer = $session->getCustomerUser();
 
@@ -129,8 +139,13 @@ class PaymentConditionService
 
     public function filterByAreaCondition(ModuleQuery $query)
     {
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request || !$request->hasSession()) {
+            return;
+        }
+
         /** @var Order $order */
-        $order = $this->requestStack->getCurrentRequest()->getSession()->get('thelia.order');
+        $order = $request->getSession()->get('thelia.order');
 
         if (null === $order) {
             return;
@@ -169,7 +184,12 @@ class PaymentConditionService
 
     public function filterByCustomerCondition(ModuleQuery $query)
     {
-        $session = $this->requestStack->getCurrentRequest()->getSession();
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request || !$request->hasSession()) {
+            return;
+        }
+
+        $session = $request->getSession();
 
         $customer = $session->getCustomerUser();
 
