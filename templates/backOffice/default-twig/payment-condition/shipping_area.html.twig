@@ -1,5 +1,5 @@
 {# Shipping area condition matrix fragment (loaded via AJAX into the module config page) #}
-<div class="card mb-3">
+<div class="card mb-3 area_condition_matrix" data-token="{{ assignToken() }}">
     <div class="card-body">
         <h4 class="card-title">{{ 'Condition by chosen shipping area'|trans({}, 'paymentcondition.bo.default') }}</h4>
         <div class="table-responsive">
@@ -35,7 +35,8 @@
 
 <script>
     (function () {
-        var url = "{{ path('payment_condition_area_condition_save') }}?_token={{ assignToken() }}";
+        var url = "{{ path('payment_condition_area_condition_save') }}";
+        var token = document.querySelector('.area_condition_matrix').dataset.token;
         document.querySelectorAll('.area_condition_switch').forEach(function (input) {
             input.addEventListener('change', function () {
                 var checkbox = this;
@@ -43,6 +44,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
                     body: new URLSearchParams({
+                        _token: token,
                         areaId: checkbox.dataset.area,
                         paymentId: checkbox.dataset.payment,
                         isValid: checkbox.checked ? 'true' : 'false'

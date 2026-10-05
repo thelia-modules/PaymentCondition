@@ -73,7 +73,7 @@ class CustomerFamilyConditionController extends BaseAdminController
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        $tokenProvider->checkToken((string) $request->query->get('_token'));
+        $tokenProvider->checkToken((string) $request->request->get('_token'));
 
         try {
             $moduleId = $request->request->get('moduleId');
