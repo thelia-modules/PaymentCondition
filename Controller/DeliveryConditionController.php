@@ -7,6 +7,8 @@ use PaymentCondition\Model\PaymentDeliveryConditionQuery;
 use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
+use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Model\ModuleQuery;
 use Thelia\Module\BaseModule;
 use Thelia\Tools\TokenProvider;
@@ -16,6 +18,10 @@ class DeliveryConditionController extends BaseAdminController
     #[Route('/admin/module/paymentcondition/delivery', name: 'payment_condition_delivery_condition_view', methods: ['GET'])]
     public function viewAction()
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'PaymentCondition', AccessManager::VIEW)) {
+            return $response;
+        }
+
         $paymentDeliveryConditionArray = [];
 
         $paymentModules = ModuleQuery::create()
@@ -46,6 +52,10 @@ class DeliveryConditionController extends BaseAdminController
     #[Route('/admin/module/paymentcondition/delivery', name: 'payment_condition_delivery_condition_save', methods: ['POST'])]
     public function saveAction(TokenProvider $tokenProvider)
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'PaymentCondition', AccessManager::UPDATE)) {
+            return $response;
+        }
+
         $request = $this->requestStack->getCurrentRequest();
 
         $tokenProvider->checkToken((string) $request->request->get('_token'));

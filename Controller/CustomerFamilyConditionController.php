@@ -9,6 +9,8 @@ use PaymentCondition\Model\PaymentCustomerFamilyConditionQuery;
 use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
+use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Model\LangQuery;
 use Thelia\Model\Module;
 use Thelia\Model\ModuleQuery;
@@ -20,6 +22,10 @@ class CustomerFamilyConditionController extends BaseAdminController
     #[Route('/admin/module/paymentcondition/customerfamily', name: 'payment_condition_customer_family_condition_view', methods: ['GET'])]
     public function viewAction()
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'PaymentCondition', AccessManager::VIEW)) {
+            return $response;
+        }
+
         $customerFamilyPaymentsModules = [];
         $moduleCodes = [];
         $familyCodes = [];
@@ -71,6 +77,10 @@ class CustomerFamilyConditionController extends BaseAdminController
     #[Route('/admin/module/paymentcondition/customerfamily', name: 'payment_condition_customer_family_condition_save', methods: ['POST'])]
     public function saveAction(TokenProvider $tokenProvider)
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'PaymentCondition', AccessManager::UPDATE)) {
+            return $response;
+        }
+
         $request = $this->requestStack->getCurrentRequest();
 
         $tokenProvider->checkToken((string) $request->request->get('_token'));
