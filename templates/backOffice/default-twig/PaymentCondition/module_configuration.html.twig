@@ -30,6 +30,18 @@
             return;
         }
 
+        // Scripts inserted through innerHTML are not executed: re-create them.
+        function runScripts(root) {
+            root.querySelectorAll('script').forEach(function (old) {
+                var script = document.createElement('script');
+                Array.prototype.forEach.call(old.attributes, function (attribute) {
+                    script.setAttribute(attribute.name, attribute.value);
+                });
+                script.textContent = old.textContent;
+                old.parentNode.replaceChild(script, old);
+            });
+        }
+
         function loadFragment(url, targetId) {
             if (!url) {
                 return;
@@ -40,7 +52,7 @@
             }
             fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                 .then(function (response) { return response.text(); })
-                .then(function (html) { target.innerHTML = html; });
+                .then(function (html) { target.innerHTML = html; runScripts(target); });
         }
 
         loadFragment(container.dataset.deliveryUrl, 'payment_condition_delivery');
